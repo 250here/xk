@@ -5,9 +5,10 @@ import DAO.StudentDAO;
 import DAO.TeacherDAO;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-public class LoginService {
+public class AccountService {
     private String ROOTPW="root";
     TeacherDAO teacherDAO=new TeacherDAO();
     StudentDAO studentDAO=new StudentDAO();
@@ -29,5 +30,11 @@ public class LoginService {
             session.setAttribute("user",user);
             return true;
         }
+    }
+    public void RedirectToCorrectPage(HttpServletRequest request, HttpServletResponse response){
+        lbcloeuwaifuvl
+    }
+    public void Logout(HttpServletRequest request){
+        request.getSession().removeAttribute("user");
     }
 }

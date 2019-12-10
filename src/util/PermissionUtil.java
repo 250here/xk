@@ -17,9 +17,14 @@ public class PermissionUtil {
         }
         return true;
     }
-    private static void setRedirectToindex(HttpServletResponse response){
+    public static void setRedirectToindex(HttpServletResponse response){
         response.setStatus(response.SC_MOVED_TEMPORARILY);
-        response.setHeader("Location","/Museum/index");
+        response.setHeader("Location","/xk");
+        return;
+    }
+    public static void setRedirectTo(String dest,HttpServletResponse response){
+        response.setStatus(response.SC_MOVED_TEMPORARILY);
+        response.setHeader("Location",dest);
         return;
     }
 }
