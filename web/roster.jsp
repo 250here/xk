@@ -1,4 +1,11 @@
-<%--
+<%@ page import="Service.AccountService" %>
+<%@ page import="Beans.User" %>
+<%@ page import="DAO.TeachesDAO" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="sun.swing.SwingUtilities2" %>
+<%@ page import="Beans.Section" %>
+<%@ page import="DAO.TakesDAO" %>
+<%@ page import="DAO.StudentDAO" %><%--
   Created by IntelliJ IDEA.
   User: 1874442361
   Date: 2019/12/17
@@ -26,10 +33,31 @@
         <caption>花名册</caption>
         <tr> <thead>
         <th></th>
-        <th>课程</th>
+        <th>课程代码</th>
         <th>学号</th>
+        <th>姓名</th>
         </thead>
-        <tr></tr></table>
+        <%
+        User user = (User)session.getAttribute("user");
+                TeachesDAO teachesDAO = new TeachesDAO();
+                ArrayList<Section> sections = teachesDAO.getSectionByTeacherid("T001");
+                TakesDAO takesDAO = new TakesDAO();
+                StudentDAO studentDAO = new StudentDAO();
+                for(Section section:sections){
+                    ArrayList<User> students = takesDAO.getStudentsBySectionid(section.getSectionId()); //返回的student只有id属性
+                    for (User stu:students){
+                        User student = studentDAO.getUserByStudenetID(stu.id);
+                        %>
+        <tr>
+        <th><%=section.getSectionId()%>></th>
+        <th><%=student.id%></th>
+        <th><%=student.name%></th>
+        </tr>
+                <%
+                    }
+                }
+                %>
+        </table>
 </div>
 </body>
 </html>

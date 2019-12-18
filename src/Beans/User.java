@@ -10,6 +10,10 @@ public class User {
     public User(String id,String name,String password){
         this.id=id;
         this.name=name;
+        this.pass = password;
+    }
+    public User(String id){
+        this.id=id;
     }
     public boolean isRoot(){
         return id.startsWith(ROOT_START);
