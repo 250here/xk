@@ -1,9 +1,11 @@
 package util.Table2SQLTable;
 
 import DAO.DBConnections;
+import com.mysql.cj.jdbc.exceptions.SQLError;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class TestTable {
     public static void main(String[] args) throws Exception{
@@ -15,14 +17,19 @@ public class TestTable {
 //            }
 //            System.out.println(table.getInt(i,headers[2]));
 //        }
-        Connection conn=DBConnections.borrowConnection();
-        conn.setAutoCommit(false);
-        PreparedStatement stat =conn.prepareStatement("insert into teacher values ('T001','enstein','dd')");
-        stat.execute();
-        stat =conn.prepareStatement("insert into teacher values ('T001','enstein','dd')");
-        stat.execute();
-        conn.commit();
-        conn.setAutoCommit(true);
+        try {
+            Connection conn = DBConnections.borrowConnection();
+            conn.setAutoCommit(false);
+            PreparedStatement stat = conn.prepareStatement("insert into teacher values ('T001','enstein','dd')");
+            stat.execute();
+            stat = conn.prepareStatement("insert into takes values ('T001','enstein','dd',null)");
+            stat.execute();
+            conn.commit();
+            conn.setAutoCommit(true);
+        }catch(SQLException e){
+            System.out.println();
+            e.printStackTrace();
+        }
     }
     private void println(String s){
         System.out.println(s);

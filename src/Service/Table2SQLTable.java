@@ -31,17 +31,35 @@ public class Table2SQLTable {
             return e.getMessage();
         }
     }
-    public static String importTakesFromFile(String path){
-        String[] teathertableattrs=new String[]{"teacherid","teachername","teacherpassword"};
+    public static String importGradeFromFile(String path,String courseid,String sectionid){
+        String[] teathertableattrs=new String[]{"studentid","grade"};
+        try{
+            Table table=new Table(path,teathertableattrs);
+            InsertChecker ic=new InsertChecker() {
+                @Override
+                void check(Connection conn) throws  Exception{
+
+                }
+            };
+            return insert(ic,"takes",table,new datatype[]{datatype.VARCHAR20,datatype.VARCHAR20,datatype.VARCHAR20,datatype.VARCHAR20});
+        }catch (FileNotFoundException e){
+            return "文件不存在";
+        }catch (Exception e){
+            e.printStackTrace();
+            return e.getMessage();
+        }
+    }
+    public static String importTeachesFromFile(String path){
+        String[] teathertableattrs=new String[]{"teacherid","courseid","sectionid"};
         try{
             Table table=new Table(path,teathertableattrs);
             InsertChecker ic=new InsertChecker() {
                 @Override
                 void check(Connection conn) throws Exception {
-                    TableCheck.checkStudentTime(conn);
+                    TableCheck.checkTeacherTime(conn);
                 }
             };
-            return insert(ic,"takes",table,new datatype[]{datatype.VARCHAR20,datatype.VARCHAR20,datatype.VARCHAR20});
+            return insert(ic,"teaches",table,new datatype[]{datatype.VARCHAR20,datatype.VARCHAR20,datatype.VARCHAR20});
         }catch (FileNotFoundException e){
             return "文件不存在";
         }catch (Exception e){
@@ -54,14 +72,19 @@ public class Table2SQLTable {
                 "building","roomnumber","examtype","timesoltid","studentnamenumber"};
         try{
             Table table=new Table(path,sectiontableattrs);
-
+            InsertChecker ic=new InsertChecker() {
+                @Override
+                void check(Connection conn) throws Exception {
+                    TableCheck.checkSectionTime(conn);
+                }
+            };
+            return insert(ic,"section",table,new datatype[]{});
         }catch (FileNotFoundException e){
             return "文件不存在";
         }catch (Exception e){
             e.printStackTrace();
             return e.getMessage();
         }
-        return "Section table import succeed.";
     }
 //    private static void duplicateDataCheck(Table table){
 //        List headers=table.getAttrs();
@@ -102,7 +125,7 @@ public class Table2SQLTable {
             conn.setAutoCommit(true);
             commit=true;
         }catch(java.sql.SQLIntegrityConstraintViolationException e){
-            return "主键重复："+e.getMessage();
+            return "主键重复或外键约束不满足："+e.getMessage();
         }catch(java.sql.SQLException e){
             System.out.println(e.getErrorCode());
             e.printStackTrace();
