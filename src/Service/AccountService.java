@@ -4,6 +4,7 @@ import Beans.User;
 import DAO.StudentDAO;
 import DAO.TeacherDAO;
 
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -32,7 +33,7 @@ public class AccountService {
         }
     }
     public void RedirectToCorrectPage(HttpServletRequest request, HttpServletResponse response){
-        lbcloeuwaifuvl
+        throw new RuntimeException();
     }
     public void Logout(HttpServletRequest request){
         request.getSession().removeAttribute("user");

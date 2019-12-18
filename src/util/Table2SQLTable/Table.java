@@ -24,7 +24,7 @@ public class Table {
                 indexs.add(tableheaders.indexOf(head));
                 data.add(new ArrayList<String>());
             }else{
-                throw new RuntimeException("列名不符");
+                throw new RuntimeException("列名不符,属性名称或数量不正确");
             }
         }
         assert headers.length==indexs.size();
@@ -63,5 +63,12 @@ public class Table {
     }
     public int getSize(){
         return data.get(0).size();
+    }
+    public List<String> getAttrs(){
+        return headers;
+    }
+
+    public List<List<String>> getData() {
+        return data;
     }
 }

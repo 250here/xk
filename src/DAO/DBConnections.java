@@ -8,7 +8,7 @@ import java.util.Vector;
 
 public class DBConnections {
     private static Vector<Connection> connections=new Vector<>();
-    private static final String URL="jdbc:mysql://192.168.0.104:3306/online_museum?useSSL=false&serverTimezone=UTC";
+    private static final String URL="jdbc:mysql://192.168.0.104:3306/xk?useSSL=false&serverTimezone=UTC";
     private static final String USER="root";
     private static final String PASSWORD="998179Aa.7954";
 
