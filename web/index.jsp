@@ -15,7 +15,7 @@
   AccountService accountService=new AccountService();
   User user=(User)request.getSession().getAttribute("user");
   String action=request.getParameter("action");
-  if(action.equals("logout")){
+  if("logout".equals(action)){
     accountService.Logout(request);
   }
 %>
@@ -25,7 +25,7 @@
   </head>
   <body>
   <%
-    if(action.equals("login")){
+    if("login".equals(action)){
       String id=request.getParameter("id");
       String pw=request.getParameter("password");
       if(accountService.Login(id,pw,request)){

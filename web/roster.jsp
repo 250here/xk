@@ -30,6 +30,7 @@
     </ul>
 </div>
 <div class="col-sm-6" >
+    <form action="roster.jsp?action=submit" method="post">
     <table class="table table-striped">
         <caption>花名册</caption>
         <tr> <thead>
@@ -37,6 +38,9 @@
         <th>课程名称</th>
         <th>学号</th>
         <th>姓名</th>
+        <th>分数</th>
+        <th>登分</th>
+        <th>操作</th>
         </thead>
         <%
         User user = (User)session.getAttribute("user");
@@ -55,12 +59,16 @@
             <td><%=section.getSectionName()%></td>
             <td><%=student.id%></td>
             <td><%=student.name%></td>
+            <td><%=takesDAO.getGrade(section.getCourseId(),section.getSectionId(),student.id)%></td>
+            <td><input name="newgrade" type="text"></td>
+            <td><button type="submit">确认</button></td>
         </tr>
                 <%
                     }
                 }
                 %>
         </table>
+    </form>
 </div>
 </body>
 </html>

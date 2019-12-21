@@ -3,7 +3,10 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="Beans.Request" %>
 <%@ page import="DAO.TakesDAO" %>
-<%@ page import="Beans.Section" %><%--
+<%@ page import="Beans.Section" %>
+<%@ page import="Service.TakeSectonService" %>
+<%@ page import="DAO.ClassroomDAO" %>
+<%@ page import="Beans.Classroom" %><%--
   Created by IntelliJ IDEA.
   User: 1874442361
   Date: 2019/12/17
@@ -12,9 +15,10 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
+    boolean during = TakeSectonService.duringTakingSection;
     if(request.getParameter("handle")!=null){
     RequestDAO requestDAO = new RequestDAO();
-        TakesDAO takesDAO = new TakesDAO();
+    TakesDAO takesDAO = new TakesDAO();
     Request request1 = new Request(request.getParameter("courseid"),request.getParameter("sectionid"),request.getParameter("studentid"));
     requestDAO.updateState(request1,request.getParameter("handle"));
     if(request.getParameter("handle").equals("accept")){
@@ -50,9 +54,10 @@
         </thead>
 
        <%
+           if(during==true){
            User user = (User)session.getAttribute("user");
-
            RequestDAO requestDAO = new RequestDAO();
+           ClassroomDAO classroomDAO = new ClassroomDAO();
            ArrayList<Request> requests = requestDAO.getRequestByteacherId(user.id);
        for (Request request1:requests){
         %><tr>
@@ -63,17 +68,26 @@
 
             <%
         if(request1.getState().equals("handling")){
+            Section section = new Section(request1.getCourseId(),request1.getSectionId());
+            if(section.getNumberOfStudent()>=classroomDAO.getClassroom(section.getBuilding(),section.getRoomNumber()).getCapacity()){
+                requestDAO.updateState(request1,"refuse");
+                %>
+                <td>自动驳回</td>
+        <%
+            }else {
         %>
         <td><a href="handleRequest.jsp?handle=accept&courseid=<%=request1.getCourseId()%>&sectionid=<%=request1.getSectionId()%>&studentid=<%=request1.getStudentId()%>">同意</a><p></p>
             <a href="handleRequest.jsp?handle=refuse&courseid=<%=request1.getCourseId()%>&sectionid=<%=request1.getSectionId()%>&studentid=<%=request1.getStudentId()%>">拒绝</a>
         </td>
    <%
+       }
         }else{
          %>
         <td>已处理</td>
         <%
         }
        }
+           }
     %> </tr>
     </table>
 </div>

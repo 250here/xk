@@ -5,7 +5,8 @@
 <%@ page import="Beans.Section" %>
 <%@ page import="DAO.SectionDAO" %>
 <%@ page import="util.Encode" %>
-<%@ page import="Service.TakeSectonService" %><%--
+<%@ page import="Service.TakeSectonService" %>
+<%@ page import="DAO.ClassroomDAO" %><%--
   Created by IntelliJ IDEA.
   User: 1874442361
   Date: 2019/12/16
@@ -78,6 +79,8 @@ boolean during = TakeSectonService.duringTakingSection;
         if("submit".equals(request.getParameter("action"))){
         RequestDAO requestDAO1 = new RequestDAO();
         SectionDAO sectionDAO = new SectionDAO();
+        ClassroomDAO classroomDAO = new ClassroomDAO();
+
         String courseName = Encode.parseToUTF8(request.getParameter("courseName"));
         String courseid = "";
         String sectionid = "";
@@ -97,6 +100,7 @@ boolean during = TakeSectonService.duringTakingSection;
     request1.setMessage(message);
 
     if((sectionDAO.haveSection(section)) && sectionDAO.getSectionByCourseAndSectionid(courseid,sectionid)!=null && sectionDAO.getSectionByCourseAndSectionid(courseid,sectionid).getSectionName().equals(courseName)){
+    Section section1 = new Section(courseid,sectionid);
 
     if(requestDAO.haveRequest(request1)){
         %>
@@ -104,6 +108,7 @@ boolean during = TakeSectonService.duringTakingSection;
         alert("课程已申请");
     </script>
     <%
+
     }else {
         requestDAO.insertRequest(request1);
         %>

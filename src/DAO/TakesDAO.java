@@ -128,4 +128,9 @@ public class TakesDAO {
         DBConnections.returnConnection(conn);
         return new String("");
     }
+    public void updateGrade(String courseid,String sectionid,String studentid,String newgrade){
+        Connection conn=DBConnections.borrowConnection();
+        String sql="update takes set grade=? WHERE courseid=? and sectionid=? and studentid=?";
+        DBConnections.executeSql(sql,newgrade,courseid,sectionid,studentid);
+    }
 }
