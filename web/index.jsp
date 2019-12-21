@@ -24,9 +24,6 @@
     <title>Index-Login</title>
   </head>
   <body>
-<<<<<<< HEAD
-  $END$111
-=======
   <%
     if(action.equals("login")){
       String id=request.getParameter("id");
@@ -48,6 +45,5 @@
   <label>用户ID</label><input type="text" name="id">
   <label>密码</label><input type="password" name="password">
 </form>
->>>>>>> 484407afcf7b53cf324fd99a61f3c8ca5e1f9ae9
   </body>
 </html>

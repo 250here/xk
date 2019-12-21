@@ -3,9 +3,11 @@ package Service;
 import Beans.*;
 import DAO.*;
 import util.Encode;
+import util.Table2SQLTable.TableCheck;
 
 import javax.servlet.http.HttpServletRequest;
 import java.awt.*;
+import java.sql.Connection;
 
 public class InsertSectionService {
     public static String insertSection(HttpServletRequest request) throws Exception{
@@ -104,10 +106,10 @@ public class InsertSectionService {
                 if(sectionDAO.haveSection(section)){                 //................
                     return "课程已存在";
                 }
-                sectionDAO.insertSetion(section);
-                teachesDAO.insert(teacherid, courseid, sectionid);
-                examDAO.insertExam(exam);
-
+//                sectionDAO.insertSetion(section);
+//                teachesDAO.insert(teacherid, courseid, sectionid);
+//                examDAO.insertExam(exam);
+                    return insertNewSection(section,teacherid,exam);
             }else {
                     return "教室不存在";
                 }
@@ -117,7 +119,49 @@ public class InsertSectionService {
         }else {
             return "课程不存在";
         }
-    return null;
+      //return null;
     }
+    private static String insertNewSection(Section section,String teacherid,Exam exam){
+        Connection conn=DBConnections.borrowConnection();
+        boolean commit=false;
+        try{
+            conn.setAutoCommit(false);
 
+            //section
+            String sql="insert into section values (?,?,?,?,?,?,?,?)";
+            DBConnections.executeSql(conn,sql,section.getCourseId(),section.getSectionId(),section.getBuilding(),section.getRoomNumber(),section.getNumberOfStudent(),section.getExamType(),section.getTimeSlotId(),section.getStudentNumberLimit());
+
+
+            sql="insert into teaches values (?,?,?)";
+            DBConnections.executeSql(conn,sql,teacherid,section.getCourseId(),section.getSectionId());
+
+
+            sql="insert into exam values (?,?,?,?,?,?,?)";
+            DBConnections.executeSql(conn,sql,exam.getCourseid(),exam.getSectionid(),exam.getBuilding(),exam.getRoomnumber(),exam.getExamday(),exam.getExamstarttime(),exam.getExamendtime());
+
+            TableCheck.checkSectionStudentLimitLessThanClassroomcapacity(conn);
+            TableCheck.checkTeacherTime(conn);
+            TableCheck.checkSectionTime(conn);
+            TableCheck.checkClassroomTime(conn);
+            TableCheck.checkExamClassroomTime(conn);
+
+            conn.commit();
+            commit=true;
+            conn.setAutoCommit(true);
+            return "插入课程成功";
+        }catch (Exception e){
+            e.printStackTrace();
+            return e.getMessage();
+        }finally {
+            try{
+                if(!commit){
+                    conn.rollback();
+                }
+                conn.setAutoCommit(true);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            DBConnections.returnConnection(conn);
+        }
+    }
 }

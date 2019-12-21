@@ -77,5 +77,28 @@ public class DBConnections {
             DBConnections.returnConnection(conn);
         }
     }
+    public static void executeSql(Connection conn,String sql,Object...objs) {
+
+        PreparedStatement ps=null;
+        try {
+            ps=conn.prepareStatement(sql);
+            //循环为每一个变量设置参数
+            for(int i=0;i<objs.length;i++) {
+                ps.setObject(i+1, objs[i]);
+            }
+            //执行sql
+            ps.execute();
+        }catch(Exception e) {
+            e.printStackTrace();
+        }finally {
+            if(ps!=null){
+                try{
+                    ps.close();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
 }
