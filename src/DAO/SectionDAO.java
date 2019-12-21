@@ -1,5 +1,6 @@
 package DAO;
 
+import Beans.Classroom;
 import Beans.Section;
 
 import java.sql.Connection;
@@ -46,7 +47,7 @@ public class SectionDAO {
        DBConnections.returnConnection(conn);
        return section;
    }
-   public ArrayList<Section> searchSection(String partName){
+   public ArrayList<Section> searchSection(String partName){         //搜索课程
        Connection conn=DBConnections.borrowConnection();
        String sql="select * from section natural join course where title like ? or courseid like ? or sectionid like ?";
        ArrayList<Section> restule = new ArrayList<Section>();
@@ -68,7 +69,7 @@ public class SectionDAO {
                int stuentNumberLimit = rs.getInt("studentnumberlimit");
                int timeSlotId = rs.getInt("timeslotid");
                int credits = rs.getInt("credits");
-//               System.out.println("aaaaa"+courseid+sectionid+buildig+roomnuber+examType+numberOfStudent);
+
                Section section = new Section(courseid,sectionid);
                section.setSectionName(sectionName);
                section.setBuilding(buildig);
@@ -98,15 +99,11 @@ public class SectionDAO {
        String sql="delete from section where courseid=? and sectionid=?";
        DBConnections.executeSql(sql,courseid,sectionid);
    }
-   public void updataLimit(Section section,int limit){
-       Connection conn=DBConnections.borrowConnection();
-       String sql="update section set studentnumberlimit=? where courseid=? and sectionid=?";
-       DBConnections.executeSql(sql,section.getCourseId(),limit,section.getSectionId());
-   }
+
     public void updataNumber(Section section,int number){
         Connection conn=DBConnections.borrowConnection();
         String sql="update section set numberofstudent=? where courseid=? and sectionid=?";
-        DBConnections.executeSql(sql,section.getCourseId(),number,section.getSectionId());
+        DBConnections.executeSql(sql,number,section.getCourseId(),section.getSectionId());
     }
     public boolean isInCourse(Section section){
         Connection conn=DBConnections.borrowConnection();
@@ -142,5 +139,27 @@ public class SectionDAO {
         }
         DBConnections.returnConnection(conn);
         return false;
+    }
+    public String updateSectionBuilding(Section section,String building,String roomnumber){
+        Connection conn=DBConnections.borrowConnection();
+        ClassroomDAO classroomDAO = new ClassroomDAO();
+        Classroom classroom = new Classroom(building,roomnumber);
+        if(classroomDAO.haveClassroom(classroom)){
+        String sql="update section set building=? , roomnumber=? where courseid=? and sectionid=?";
+        DBConnections.executeSql(sql,building,roomnumber,section.getCourseId(),section.getSectionId());
+        return "修改成功";
+        }
+        return "教室不存在";
+    }
+    public String updateSectionLimit(Section section,int limit){
+        Connection conn=DBConnections.borrowConnection();
+        Classroom classroom = new Classroom(section.getBuilding(),section.getRoomNumber());
+        ClassroomDAO classroomDAO = new ClassroomDAO();
+        if(classroomDAO.getClassroom(section.getBuilding(),section.getRoomNumber()).getCapacity()>=limit){
+        String sql="update section set studentnumberlimit=? where courseid=? and sectionid=?";
+        DBConnections.executeSql(sql,limit,section.getCourseId(),section.getSectionId());
+        return "修改成功";
+        }
+        return "超过教室容量";
     }
 }

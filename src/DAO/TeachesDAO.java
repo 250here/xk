@@ -28,6 +28,7 @@ public class TeachesDAO {
                 int numberOfStudent = rs.getInt("numberofstudent");
                 int stuentNumberLimit = rs.getInt("studentnumberlimit");
                 int timeSlotId = rs.getInt("timeslotid");
+                int credits = rs.getInt("credits");
 
                 Section section = new Section(courseid,sectionid);
 
@@ -38,6 +39,7 @@ public class TeachesDAO {
                 section.setTimeSlotId(timeSlotId);
                 section.setNumberOfStudent(numberOfStudent);
                 section.setStudentNumberLimit(stuentNumberLimit);
+                section.setCredits(credits);
 
                 sections.add(section);
             }

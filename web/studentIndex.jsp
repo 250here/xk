@@ -15,6 +15,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     User user = (User) request.getAttribute("user");
+//    User user = new User("S001");
     if(request.getParameter("ac")!=null&&!request.getParameter("ac").equals("")){
     TakesDAO takesDAO = new TakesDAO();
     String courseid = request.getParameter("courseid");
@@ -22,21 +23,33 @@
     if(request.getParameter("ac").equals("take")){
 
         Section section =new Section(courseid,sectionid);
-        takesDAO.insertSectionToTakes(user.id,section);
+        if(!takesDAO.hadTakes(courseid,sectionid,user.id)){
+        String s = takesDAO.insertSectionToTakes(user.id,section);
+        if(s.equals("选课成功")){
         %>
-        <script type="text/javascript" language="javascript">
-            alert("选课成功");
-        </script>
+<script type="text/javascript" language="javascript">
+    alert("选课成功");
+</script>
 <%
+    }else {
+%>
+<script type="text/javascript" language="javascript">
+    alert("选课人数达到上限");
+</script>
+<%
+    }
+    }
     }
     if(request.getParameter("ac").equals("drop")){
         Section section =new Section(courseid,sectionid);
+        if(takesDAO.hadTakes(courseid,sectionid,user.id)){
         takesDAO.deleteSectionFromTakes(user.id,section);
         %>
         <script type="text/javascript" language="javascript">
             alert("退课成功");
         </script>
 <%
+    }
     }
 }
 %>

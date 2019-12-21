@@ -3,7 +3,10 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="Beans.Section" %>
 <%@ page import="Beans.TimeSlot" %>
-<%@ page import="DAO.TimeSlotDAO" %><%--
+<%@ page import="DAO.TimeSlotDAO" %>
+<%@ page import="Beans.Classroom" %>
+<%@ page import="DAO.ClassroomDAO" %>
+<%@ page import="DAO.ExamDAO" %><%--
   Created by IntelliJ IDEA.
   User: 1874442361
   Date: 2019/12/16
@@ -11,6 +14,23 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+    User user = (User)session.getAttribute("user");
+//    User user = new User("S001");
+    TakesDAO takesDAO = new TakesDAO();
+    TimeSlotDAO timeSlotDAO = new TimeSlotDAO();
+    if(request.getParameter("courseid")!=null&&!request.getParameter("courseid").equals("")){
+        Section section =new Section(request.getParameter("courseid"),request.getParameter("sectionid"));
+        if(takesDAO.hadTakes(section.getCourseId(),section.getSectionId(),user.id)){
+        takesDAO.deleteSectionFromTakes(user.id,section);
+%>
+        <script type="text/javascript" language="javascript">
+            alert("退课成功");
+        </script>
+<%
+    }
+    }
+%>
 <html>
 <head>
     <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
@@ -20,14 +40,14 @@
     <title>schedule</title>
 </head>
 <body>
-<div class="col-sm-4">
+<div class="col-sm-2">
     <ul class="nav nav-pills nav-stacked">
         <li><a href="">选课</a> </li>
         <li><a href="">查看课表</a> </li>
         <li><a href="">选课事务申请</a> </li>
     </ul>
 </div>
- <div class="col-sm-6" >
+ <div class="col-sm-8" >
     <table class="table table-striped">
         <caption>课程表</caption>
         <tr> <thead>
@@ -43,10 +63,8 @@
         </tr>
 
          <%
-             User user = (User)session.getAttribute("user");
-             TakesDAO takesDAO = new TakesDAO();
-             TimeSlotDAO timeSlotDAO = new TimeSlotDAO();
-             ArrayList<Section> sections = takesDAO.getSectionByStudentId("S001");
+
+             ArrayList<Section> sections = takesDAO.getSectionByStudentId(user.id);
             for(int i =1;i<=13;i++){
         %>
         <tr>
@@ -86,22 +104,33 @@
          <th>选课人数</th>
          <th>考试方式</th>
          <th>考试时间</th>
+         <th>考试地点</th>
+         <th>学分</th>
+         <th>操作</th>
          </thead>
+         <%
+             ExamDAO examDAO = new ExamDAO();
 
+             for(Section section:sections){
+         %>
          <tr>
-             <%
-                for(Section section:sections){
-                    %>
+
              <td><%=section.getCourseId()%>.<%=section.getSectionId()%></td>
              <td><%=section.getSectionName()%></td>
              <td><%=section.getBuilding()%> <%=section.getRoomNumber()%></td>
-             <td><%=section.getNumberOfStudent()%>/<%=section.setStudentNumberLimit();%></td>
+             <td><%=section.getNumberOfStudent()%>/<%=section.getStudentNumberLimit()%></td>
              <td><%=section.getExamType()%></td>
-             <td><%=section.get%></td>
-             <%
+             <td><%
+             TimeSlot t = examDAO.getExamTime(section.getCourseId(),section.getSectionId());
+             Classroom classroom = examDAO.getExamRoom(section.getCourseId(),section.getSectionId());
+             %>星期<%=t.getDay()%>,第<%=t.getStartTime()%>节到第<%=t.getEndTime()%>节</td>
+             <td><%=classroom.getBuilding()%>,<%=classroom.getRoomnumber()%></td>
+             <td><%=section.getCredits()%></td>
+             <td><a href="schedule.jsp?courseid=<%=section.getCourseId()%>&sectionid=<%=section.getSectionId()%>">退课</a></td>
+         </tr> <%
                 }
             %>
-         </tr>
+
      </table>
 </div>
 </body>

@@ -43,9 +43,14 @@ public class InsertSectionService {
         Classroom classroom1 = new Classroom(building,roomnumber);
         Classroom classroom2 = new Classroom(exambuilding,examroomnumber);
 
-        String[] s = id.split("\\.");
-        String courseid = s[0];
-        String sectionid = s[1];
+        String courseid ="";
+        String sectionid = "";
+        if(id.contains(".")){
+            String[] s = id.split("\\.");
+            courseid = s[0];
+            sectionid = s[1];
+        }
+
         Section section = new Section(courseid, sectionid);
 
         Exam exam = new Exam(courseid,sectionid);
@@ -55,14 +60,11 @@ public class InsertSectionService {
         exam.setExamstarttime(Integer.parseInt(examstart));
         exam.setExamendtime(Integer.parseInt(examend));
 
-//        System.out.println("a"+ courseDAO.getCourseNameByID(courseid));
-//        System.out.println(sectionName);
-//        System.out.println("c"+courseid);
 
-        if (sectionDAO.isInCourse(section)&&courseDAO.getCourseNameByID(courseid).equals(sectionName)) {
+        if (sectionDAO.isInCourse(section)&&courseDAO.getCourseNameByID(courseid)!=null&&courseDAO.getCourseNameByID(courseid).equals(sectionName)) {
             User teacher = new User(teacherid);
 
-            if (teacherDAO.hasTeacher(teacher)){//判断老师存在
+            if (teacherDAO.hasTeacher(teacher)){                                    //判断老师存在
 
                 if(classroomDAO.haveClassroom(classroom1)&&classroomDAO.haveClassroom(classroom2)){                 //判断教室存在
 

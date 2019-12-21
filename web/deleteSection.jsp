@@ -37,6 +37,7 @@ if(request.getParameter("courseid")!=null&&request.getParameter("sectionid")!=nu
     <ul class="nav nav-pills nav-stacked">
         <li><a href="addSection.jsp">添加课程</a> </li>
         <li><a href="deleteSection.jsp">删除课程</a> </li>
+        <li><a href="updateSection.jsp">修改课程信息</a></li>
         <li><a href="">开启选课</a></li>
     </ul>
 </div>

@@ -22,7 +22,7 @@
     <ul class="nav nav-pills nav-stacked">
         <li><a href="addSection.jsp">添加课程</a> </li>
         <li><a href="deleteSection.jsp">删除课程</a> </li>
-        <li><a href="">添加上课学生</a></li>
+        <li><a href="updateSection.jsp">修改课程信息</a></li>
         <li><a href="">开启选课</a></li>
     </ul>
 </div>
@@ -75,8 +75,6 @@
                 %>
     <script type="text/javascript" language="javascript">
         alert("导入失败<%=result%>");                                            // 弹出错误信息
-
-//        window.location='userlogin.html' ;                            // 跳转到登录界面
     </script>
     <%
             }else {

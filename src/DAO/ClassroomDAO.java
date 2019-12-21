@@ -25,4 +25,25 @@ public class ClassroomDAO {
         //assert user!=null;
         return false;
     }
+    public Classroom getClassroom(String building,String roomnumber){
+        Connection conn=DBConnections.borrowConnection();
+        String sql="select * from classroom where building=? and roomnumber=?";
+        try{
+            PreparedStatement stmt= conn.prepareStatement(sql);
+            stmt.setObject(1,building);
+            stmt.setObject(2,roomnumber);
+            ResultSet rs=    stmt.executeQuery();
+            if(rs.next()){
+                int capacity = rs.getInt("capacity");
+                Classroom classroom = new Classroom(building,roomnumber);
+                classroom.setCapacity(capacity);
+                return classroom;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        DBConnections.returnConnection(conn);
+        //assert user!=null;
+        return new Classroom();
+    }
 }
