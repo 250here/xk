@@ -1,5 +1,7 @@
 package util.Table2SQLTable;
 
+import DAO.DBConnections;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -117,5 +119,35 @@ public class TableCheck {
         if(rs.next()){
             throw new RuntimeException(rs.getString("courseid")+"."+rs.getString("sectionid")+"最大人数大于教室容量");
         }
+    }
+    public static boolean checkStudentExamTime(String studentid)throws Exception{
+        String sql="with student_examtime as (select studentid,courseid,sectionid,examday,examstarttime,examendtime "+
+                "from student natural join takes natural join exam "+
+                "where studentid=? )";
+        sql+="select * from student_examtime as S join student_examtime as T "
+                +"on S.studentid=T.studentid and not (S.courseid=T.courseid and S.sectionid=T.sectionid)";
+        sql+="where S.day =T.day and S.starttime<=T.starttime and T.starttime<=S.endtime";
+        Connection conn= DBConnections.borrowConnection();
+        PreparedStatement stat=conn.prepareStatement(sql);
+        stat.setObject(1,studentid);
+        ResultSet rs=stat.executeQuery();
+        boolean pass=!rs.next();
+        DBConnections.returnConnection(conn);
+        return pass;
+    }
+    public static boolean checkStudentTime(String studentid)throws Exception{
+        String sql="with student_time as (select studentid,courseid,sectionid,day,starttime,endtime "+
+                "from student natural join takes natural join section natural join timeslot) "+
+                "where studentid=? ";
+        sql+="select * from student_time as S join student_time as T "
+                +"on S.studentid=T.studentid and not (S.courseid=T.courseid and S.sectionid=T.sectionid)";
+        sql+="where S.day =T.day and S.starttime<=T.starttime and T.starttime<=S.endtime";
+        Connection conn= DBConnections.borrowConnection();
+        PreparedStatement stat=conn.prepareStatement(sql);
+        stat.setObject(1,studentid);
+        ResultSet rs=stat.executeQuery();
+        boolean pass=!rs.next();
+        DBConnections.returnConnection(conn);
+        return pass;
     }
 }

@@ -3,6 +3,7 @@ package Service;
 import Beans.User;
 import DAO.StudentDAO;
 import DAO.TeacherDAO;
+import util.PermissionUtil;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -33,7 +34,19 @@ public class AccountService {
         }
     }
     public void RedirectToCorrectPage(HttpServletRequest request, HttpServletResponse response){
-        throw new RuntimeException();
+        User user=(User)request.getSession().getAttribute("user");
+        String des="/xk/";
+        if(user==null){
+
+        }else if(user.isRoot()){
+            des+="addSection.jsp";
+        }else if(user.isTeacher()){
+            des+="teacherSchedule.jsp";
+        }else if(user.isStudent()){
+            des+="studentIndex.jsp";
+        }
+        PermissionUtil.setRedirectTo(des,response);
+        return;
     }
     public void Logout(HttpServletRequest request){
         request.getSession().removeAttribute("user");

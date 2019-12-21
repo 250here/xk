@@ -30,12 +30,14 @@
       String pw=request.getParameter("password");
       if(accountService.Login(id,pw,request)){
         //user=(User)request.getSession().getAttribute("user");
+        accountService.RedirectToCorrectPage(request,response);
         return;
       }else{
         out.println("学工号或密码错误");
       }
     }
-    if(PermissionUtil.checkLogin(request,response)){
+    //if(PermissionUtil.checkLogin(request,response)){
+    if(user!=null){
   %>
   hello,<%=user.name%>. click <a href="index.jsp?action=logout">here</a> to logout.
   <%
@@ -44,6 +46,7 @@
 <form action="index.jsp?action=login" method="post">
   <label>用户ID</label><input type="text" name="id">
   <label>密码</label><input type="password" name="password">
+  <input type="submit" value="login">
 </form>
   </body>
 </html>

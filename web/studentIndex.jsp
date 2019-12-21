@@ -6,7 +6,8 @@
 <%@ page import="DAO.TimeSlotDAO" %>
 <%@ page import="Beans.TimeSlot" %>
 <%@ page import="DAO.TakesDAO" %>
-<%@ page import="Service.TakeSectonService" %><%--
+<%@ page import="Service.TakeSectonService" %>
+<%@ page import="util.Table2SQLTable.TableCheck" %><%--
   Created by IntelliJ IDEA.
   User: 1874442361
   Date: 2019/12/16
@@ -27,16 +28,29 @@
         Section section =new Section(courseid,sectionid);
         if(!takesDAO.hadTakes(courseid,sectionid,user.id)){
         String s = takesDAO.insertSectionToTakes(user.id,section);
+
         if(s.equals("选课成功")){
+            s="";
+            if(!TableCheck.checkStudentTime(user.id)){
+                s+="上课时间冲突.";
+            }
+            if(!TableCheck.checkStudentExamTime(user.id)){
+                s+="考试时间冲突.";
+            }
+            if(s.equals("")){
+                s="选课成功";
+            }else{
+                takesDAO.deleteSectionFromTakes(user.id,section);
+            }
         %>
 <script type="text/javascript" language="javascript">
-    alert("选课成功");
+    alert(<%=s%>);
 </script>
 <%
     }else {
 %>
 <script type="text/javascript" language="javascript">
-    alert("选课人数达到上限");
+    alert("选课失败");
 </script>
 <%
     }
