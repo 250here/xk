@@ -5,6 +5,7 @@ import com.mysql.cj.jdbc.exceptions.SQLError;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class TestTable {
@@ -22,6 +23,11 @@ public class TestTable {
             conn.setAutoCommit(false);
             PreparedStatement stat = conn.prepareStatement("insert into teacher values ('T001','enstein','dd')");
             stat.execute();
+            stat = conn.prepareStatement("select * from teacher");
+            ResultSet rs=stat.executeQuery();
+            if(rs.next()){
+                System.out.println(rs.getString("teachername"));
+            }
             stat = conn.prepareStatement("insert into takes values ('T001','enstein','dd',null)");
             stat.execute();
             conn.commit();
