@@ -5,7 +5,8 @@
 <%@ page import="Beans.User" %>
 <%@ page import="DAO.TimeSlotDAO" %>
 <%@ page import="Beans.TimeSlot" %>
-<%@ page import="DAO.TakesDAO" %><%--
+<%@ page import="DAO.TakesDAO" %>
+<%@ page import="Service.TakeSectonService" %><%--
   Created by IntelliJ IDEA.
   User: 1874442361
   Date: 2019/12/16
@@ -14,6 +15,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
+    boolean durng = TakeSectonService.duringTakingSection;
     User user = (User) request.getAttribute("user");
 //    User user = new User("S001");
     if(request.getParameter("ac")!=null&&!request.getParameter("ac").equals("")){
@@ -64,9 +66,10 @@
 
                <div class="col-sm-2">
                 <ul class="nav nav-pills nav-stacked">
-                    <li><a href="">选课</a> </li>
-                    <li><a href="">查看课表</a> </li>
-                    <li><a href="">选课事务申请</a> </li>
+                    <li><a href="studentIndex.jsp">选课</a> </li>
+                    <li><a href="schedule.jsp">查看课表</a> </li>
+                    <li><a href="request.jsp">选课事务申请</a> </li>
+                    <li><a href="index.jsp?action=logout">登出</a></li>
                 </ul>
             </div>
             <div class="col-sm-6" >
@@ -118,6 +121,7 @@
                         <td><%=section.getNumberOfStudent()%>/<%=section.getStudentNumberLimit()%></td>
                         <td>
                             <%
+                                if(durng==true){
                             if(takesDAO.hadTakes(section.getCourseId(),section.getSectionId(),user.id)){
                                 %>
                             <a href="studentIndex.jsp?ac=drop&courseid=<%=section.getCourseId()%>&sectionid=<%=section.getSectionId()%>">退课</a>
@@ -127,6 +131,7 @@
                             <a href="studentIndex.jsp?ac=take&courseid=<%=section.getCourseId()%>&sectionid=<%=section.getSectionId()%>">选课</a>
                             <%
                             }
+                                }
                             %>
 
                         </td> </tr>

@@ -109,4 +109,23 @@ public class TakesDAO {
         DBConnections.returnConnection(conn);
         return false;
     }
+    public String getGrade(String courseid,String sectionid,String studentid){
+        Connection conn=DBConnections.borrowConnection();
+        String sql="select * from takes where courseid=? and sectionid=? and studentid=?";
+        try{
+            PreparedStatement stmt= conn.prepareStatement(sql);
+            stmt.setObject(1,courseid);
+            stmt.setObject(2,sectionid);
+            stmt.setObject(3,studentid);
+            ResultSet rs=    stmt.executeQuery();
+            if(rs.next()){
+                String grade = rs.getString("grade");
+                return grade;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        DBConnections.returnConnection(conn);
+        return new String("");
+    }
 }

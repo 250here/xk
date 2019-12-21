@@ -21,6 +21,7 @@
         <li><a href="deleteSection.jsp">删除课程</a> </li>
         <li><a href="updateSection.jsp">修改课程信息</a></li>
         <li><a href="">开启选课</a></li>
+        <li><a href="index.jsp?action=logout">登出</a></li>
     </ul>
 </div>
 

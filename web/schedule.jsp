@@ -6,7 +6,8 @@
 <%@ page import="DAO.TimeSlotDAO" %>
 <%@ page import="Beans.Classroom" %>
 <%@ page import="DAO.ClassroomDAO" %>
-<%@ page import="DAO.ExamDAO" %><%--
+<%@ page import="DAO.ExamDAO" %>
+<%@ page import="Service.TakeSectonService" %><%--
   Created by IntelliJ IDEA.
   User: 1874442361
   Date: 2019/12/16
@@ -15,6 +16,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
+    boolean during = TakeSectonService.duringTakingSection;
     User user = (User)session.getAttribute("user");
 //    User user = new User("S001");
     TakesDAO takesDAO = new TakesDAO();
@@ -42,9 +44,10 @@
 <body>
 <div class="col-sm-2">
     <ul class="nav nav-pills nav-stacked">
-        <li><a href="">选课</a> </li>
-        <li><a href="">查看课表</a> </li>
-        <li><a href="">选课事务申请</a> </li>
+        <li><a href="studentIndex.jsp">选课</a> </li>
+        <li><a href="schedule.jsp">查看课表</a> </li>
+        <li><a href="request.jsp">选课事务申请</a> </li>
+        <li><a href="index.jsp?action=logout">登出</a></li>
     </ul>
 </div>
  <div class="col-sm-8" >
@@ -106,6 +109,7 @@
          <th>考试时间</th>
          <th>考试地点</th>
          <th>学分</th>
+         <th>成绩</th>
          <th>操作</th>
          </thead>
          <%
@@ -126,7 +130,8 @@
              %>星期<%=t.getDay()%>,第<%=t.getStartTime()%>节到第<%=t.getEndTime()%>节</td>
              <td><%=classroom.getBuilding()%>,<%=classroom.getRoomnumber()%></td>
              <td><%=section.getCredits()%></td>
-             <td><a href="schedule.jsp?courseid=<%=section.getCourseId()%>&sectionid=<%=section.getSectionId()%>">退课</a></td>
+             <td><%=takesDAO.getGrade(section.getCourseId(),section.getSectionId(),user.id)%></td>
+             <td><%if(during==true){%><a href="schedule.jsp?courseid=<%=section.getCourseId()%>&sectionid=<%=section.getSectionId()%>">退课</a><%}%></td>
          </tr> <%
                 }
             %>

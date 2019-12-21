@@ -4,7 +4,8 @@
 <%@ page import="Beans.Request" %>
 <%@ page import="Beans.Section" %>
 <%@ page import="DAO.SectionDAO" %>
-<%@ page import="util.Encode" %><%--
+<%@ page import="util.Encode" %>
+<%@ page import="Service.TakeSectonService" %><%--
   Created by IntelliJ IDEA.
   User: 1874442361
   Date: 2019/12/16
@@ -12,6 +13,9 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+boolean during = TakeSectonService.duringTakingSection;
+%>
 <html>
 <head>
     <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
@@ -23,9 +27,10 @@
 <body>
 <div class="col-sm-4">
     <ul class="nav nav-pills nav-stacked">
-        <li><a href="">选课</a> </li>
-        <li><a href="">查看课表</a> </li>
-        <li><a href="">选课事务申请</a> </li>
+        <li><a href="studentIndex.jsp">选课</a> </li>
+        <li><a href="schedule.jsp">查看课表</a> </li>
+        <li><a href="request.jsp">选课事务申请</a> </li>
+        <li><a href="index.jsp?action=logout">登出</a></li>
     </ul>
 </div>
 <div class="col-sm-6" >
@@ -65,7 +70,7 @@
         <td><input name="id" type="text"></td>
         <td><input name="courseName" type="text"></td>
         <td><input name="message" type="text"></td>
-        <td><button type="submit" value="提交">提交</button></td>
+        <td><%if(during==true){%><button type="submit" value="提交">提交</button><%}%></td>
     </tr>
     </form>
     </table>

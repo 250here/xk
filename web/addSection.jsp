@@ -2,7 +2,8 @@
 <%@ page import="Beans.User" %>
 <%@ page import="Beans.TimeSlot" %>
 <%@ page import="DAO.*" %>
-<%@ page import="Service.InsertSectionService" %><%--
+<%@ page import="Service.InsertSectionService" %>
+<%@ page import="Service.TakeSectonService" %><%--
   Created by IntelliJ IDEA.
   User: 1874442361
   Date: 2019/12/17
@@ -10,6 +11,16 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+    boolean during = TakeSectonService.duringTakingSection;
+    if(request.getParameter("change")!=null&&!request.getParameter("change").equals("")){
+        if(request.getParameter("change").equals("open")){
+            TakeSectonService.duringTakingSection=true;
+        }else {
+            TakeSectonService.duringTakingSection=false;
+        }
+    }
+%>
 <html>
 <head>
     <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
@@ -23,7 +34,14 @@
         <li><a href="addSection.jsp">添加课程</a> </li>
         <li><a href="deleteSection.jsp">删除课程</a> </li>
         <li><a href="updateSection.jsp">修改课程信息</a></li>
-        <li><a href="">开启选课</a></li>
+        <li><a href="index.jsp?action=logout">登出</a></li>
+        <li><%if(during==false){
+
+        %><a href="addSection.jsp?change=open">开启选课</a><%
+        }else {
+            %><a href="addSection.jsp?change=close">关闭选课</a>
+        <%}%>
+        </li>
     </ul>
 </div>
 

@@ -2,7 +2,7 @@ package Beans;
 
 public class Section {
     private String courseId;
-    private String sectionId = null;
+    private String sectionId;
     private String sectionName;
     private String examType;
     private int studentNumberLimit;

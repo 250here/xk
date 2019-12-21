@@ -1,5 +1,6 @@
 <%@ page import="Beans.User" %>
-<%@ page import="Service.LeadingInService" %><%--
+<%@ page import="Service.LeadingInService" %>
+<%@ page import="Service.TakeSectonService" %><%--
   Created by IntelliJ IDEA.
   User: dell
   Date: 2019/12/20
@@ -8,6 +9,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
+    boolean during = TakeSectonService.duringTakingSection;
     User user=(User)session.getAttribute("user");
     if(user==null||!user.isRoot()){
         return;
@@ -18,6 +20,23 @@
     <title>Leading-in from csv</title>
 </head>
 <body>
+<div class="col-sm-2">
+    <ul class="nav nav-pills nav-stacked">
+        <li><a href="addSection.jsp">添加课程</a> </li>
+        <li><a href="deleteSection.jsp">删除课程</a> </li>
+        <li><a href="updateSection.jsp">修改课程信息</a></li>
+        <li><a href="index.jsp?action=logout">登出</a></li>
+        <li><%if(during==false){
+
+        %><a href="addSection.jsp?change=open">开启选课</a><%
+        }else {
+        %><a href="addSection.jsp?change=close">关闭选课</a>
+            <%}%>
+        </li>
+    </ul>
+</div>
+
+<div class="col-sm-9">
 <h2>导入</h2>
 <p>
 <%
@@ -46,5 +65,6 @@
     <input type="file" required="required" name="csvfile" accept="text/csv">
     <input type="submit" value="确认提交">
 </form>
+</div>
 </body>
 </html>
