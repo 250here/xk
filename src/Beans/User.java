@@ -15,6 +15,7 @@ public class User {
     public User(String id){
         this.id=id;
     }
+    public User(){}
     public boolean isRoot(){
         return id.startsWith(ROOT_START);
     }

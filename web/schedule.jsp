@@ -1,4 +1,9 @@
-<%--
+<%@ page import="Beans.User" %>
+<%@ page import="DAO.TakesDAO" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="Beans.Section" %>
+<%@ page import="Beans.TimeSlot" %>
+<%@ page import="DAO.TimeSlotDAO" %><%--
   Created by IntelliJ IDEA.
   User: 1874442361
   Date: 2019/12/16
@@ -23,31 +28,81 @@
     </ul>
 </div>
  <div class="col-sm-6" >
-
     <table class="table table-striped">
         <caption>课程表</caption>
         <tr> <thead>
         <th></th>
-        <th>星期日</th>
         <th>星期一</th>
         <th>星期二</th>
         <th>星期三</th>
         <th>星期四</th>
         <th>星期五</th>
         <th>星期六</th>
+        <th>星期日</th>
         </thead>
         </tr>
 
          <%
+             User user = (User)session.getAttribute("user");
+             TakesDAO takesDAO = new TakesDAO();
+             TimeSlotDAO timeSlotDAO = new TimeSlotDAO();
+             ArrayList<Section> sections = takesDAO.getSectionByStudentId("S001");
             for(int i =1;i<=13;i++){
         %>
-        <tr><th> 第<%=i%>节</th></tr>
+        <tr>
+            <td> 第<%=i%>节</td>
             <%
+                for(int j = 1;j<=7;j++ ){
+            for(Section section:sections){
+                ArrayList<TimeSlot> timeSlots = timeSlotDAO.getTimeSlot(section.getTimeSlotId());
+                for (TimeSlot timeSlot:timeSlots){
+                    if(timeSlot.getStartTime()==i&&timeSlot.getDay()==j){
+                    int last = timeSlot.getEndTime()-timeSlot.getStartTime()+1;
+                    %>
+            <td rowspan=<%=last%>>
+                <%=section.getSectionName()%>
+                <p></p>
+                <%=section.getBuilding()%>
+                <%=section.getRoomNumber()%>
+            </td>
+            <%}
+            }
+                }
+            }
                 }
             %>
+        </tr>
+
 
 
     </table>
+
+     <table class="table table-striped">
+         <caption>已选课程</caption>
+          <thead>
+         <th>课程ID</th>
+         <th>课程名称</th>
+         <th>上课地点</th>
+         <th>选课人数</th>
+         <th>考试方式</th>
+         <th>考试时间</th>
+         </thead>
+
+         <tr>
+             <%
+                for(Section section:sections){
+                    %>
+             <td><%=section.getCourseId()%>.<%=section.getSectionId()%></td>
+             <td><%=section.getSectionName()%></td>
+             <td><%=section.getBuilding()%> <%=section.getRoomNumber()%></td>
+             <td><%=section.getNumberOfStudent()%>/<%=section.setStudentNumberLimit();%></td>
+             <td><%=section.getExamType()%></td>
+             <td><%=section.get%></td>
+             <%
+                }
+            %>
+         </tr>
+     </table>
 </div>
 </body>
 </html>

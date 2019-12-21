@@ -1,4 +1,10 @@
-<%--
+<%@ page import="Beans.User" %>
+<%@ page import="DAO.TeachesDAO" %>
+<%@ page import="DAO.SectionDAO" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="Beans.Section" %>
+<%@ page import="Beans.TimeSlot" %>
+<%@ page import="DAO.TimeSlotDAO" %><%--
   Created by IntelliJ IDEA.
   User: 1874442361
   Date: 2019/12/17
@@ -26,21 +32,41 @@
     <table class="table table-striped">
         <caption>课程表</caption>
         <tr> <thead>
-        <th></th>
-        <th>星期日</th>
-        <th>星期一</th>
-        <th>星期二</th>
-        <th>星期三</th>
-        <th>星期四</th>
-        <th>星期五</th>
-        <th>星期六</th>
+        <th>课程ID</th>
+        <th>课程名称</th>
+        <th>上课时间</th>
+        <th>上课地点</th>
+        <th>学分</th>
+        <th>选课人数</th>
+        <th>考核方式</th>
         </thead>
         </tr>
 
         <%
-            for(int i =1;i<=13;i++){
+            User user = (User)session.getAttribute("user");
+            TeachesDAO teachesDAO = new TeachesDAO();
+            SectionDAO sectionDAO = new SectionDAO();
+            TimeSlotDAO timeSlotDAO = new TimeSlotDAO();
+
+            ArrayList<Section> sections = teachesDAO.getSectionByTeacherid(user.id);
+            for(Section section:sections){
         %>
-        <tr><th> 第<%=i%>节</th></tr>
+       <tr>
+           <td><%=section.getSectionId()%></td>
+           <td><%=section.getSectionName()%></td>
+           <td><%
+               ArrayList<TimeSlot> timeSlots = timeSlotDAO.getTimeSlot(section.getTimeSlotId());
+           for(TimeSlot timeSlot:timeSlots){
+           %>
+           周<%=timeSlot.getDay()%>第<%=timeSlot.getStartTime()%>节到第<%=timeSlot.getEndTime()%>节<p></p>
+           <%
+           }
+           %></td>
+           <td><%=section.getBuilding()%><%=section.getRoomNumber()%></td>
+           <td><%=section.getCredits()%></td>
+           <td><%=section.getNumberOfStudent()%>/<%=section.getStudentNumberLimit()%></td>
+           <td><%=section.getExamType()%></td>
+       </tr>
         <%
             }
         %>

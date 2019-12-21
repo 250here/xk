@@ -32,26 +32,28 @@
     <table class="table table-striped">
         <caption>花名册</caption>
         <tr> <thead>
-        <th></th>
         <th>课程代码</th>
+        <th>课程名称</th>
         <th>学号</th>
         <th>姓名</th>
         </thead>
         <%
         User user = (User)session.getAttribute("user");
                 TeachesDAO teachesDAO = new TeachesDAO();
-                ArrayList<Section> sections = teachesDAO.getSectionByTeacherid("T001");
+                ArrayList<Section> sections = teachesDAO.getSectionByTeacherid(user.id);
                 TakesDAO takesDAO = new TakesDAO();
                 StudentDAO studentDAO = new StudentDAO();
+
                 for(Section section:sections){
-                    ArrayList<User> students = takesDAO.getStudentsBySectionid(section.getSectionId()); //返回的student只有id属性
+                    ArrayList<User> students = takesDAO.getStudentsBySectionid(section.getCourseId(),section.getSectionId()); //返回的student只有id属性
                     for (User stu:students){
                         User student = studentDAO.getUserByStudenetID(stu.id);
                         %>
         <tr>
-        <th><%=section.getSectionId()%>></th>
-        <th><%=student.id%></th>
-        <th><%=student.name%></th>
+            <td><%=section.getSectionId()%></td>
+            <td><%=section.getSectionName()%></td>
+            <td><%=student.id%></td>
+            <td><%=student.name%></td>
         </tr>
                 <%
                     }

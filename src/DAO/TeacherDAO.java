@@ -28,4 +28,21 @@ public class TeacherDAO {
         //assert user!=null;
         return user;
     }
+    public boolean hasTeacher(User user){
+        Connection conn=DBConnections.borrowConnection();
+        String sql="select * from teacher where teacherid=?";
+        try{
+            PreparedStatement stmt= conn.prepareStatement(sql);
+            stmt.setObject(1,user.id);
+            ResultSet rs=    stmt.executeQuery();
+            if(rs.next()){
+                return true;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        DBConnections.returnConnection(conn);
+        //assert user!=null;
+        return false;
+    }
 }
