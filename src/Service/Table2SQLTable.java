@@ -1,8 +1,10 @@
 package Service;
 
 import DAO.DBConnections;
+import util.Table2SQLTable.GradeTable;
 import util.Table2SQLTable.Table;
 import util.Table2SQLTable.TableCheck;
+import util.Table2SQLTable.TableImpl;
 
 import java.io.FileNotFoundException;
 import java.sql.Connection;
@@ -105,7 +107,7 @@ public class Table2SQLTable {
     public static String importGradeFromFile(String path,String courseid,String sectionid){
         String[] teathertableattrs=new String[]{"studentid","grade"};
         try{
-            Table table=new Table(path,teathertableattrs);
+            TableImpl table=new GradeTable(courseid,sectionid,path);
             InsertChecker ic=new InsertChecker() {
                 @Override
                 void check(Connection conn) throws  Exception{
@@ -189,7 +191,7 @@ public class Table2SQLTable {
 //
 //        }
 //    }
-    private static String insert(InsertChecker ic,String tablename,Table table,datatype[] types){
+    private static String insert(InsertChecker ic, String tablename, TableImpl table, datatype[] types){
         Connection conn= DBConnections.borrowConnection();
         boolean commit=false;
         try{
@@ -197,7 +199,12 @@ public class Table2SQLTable {
             int width=table.getAttrs().size();
             int rowsnum=table.getSize();
             assert width==types.length;
-            String sql=getSQL(tablename,table);
+            String sql;
+            if(!"takes".equals(tablename)){
+                sql=getSQL(tablename,table);
+            }else{
+                sql=getUpdateGradeSQL();
+            }
             for(int rownum=0;rownum<rowsnum;rownum++){
                 PreparedStatement stat =conn.prepareStatement(sql);
                 for(int col=0;col<types.length;col++){
@@ -244,9 +251,9 @@ public class Table2SQLTable {
             }
             DBConnections.returnConnection(conn);
         }
-        return tablename+" table import succdeed.";
+        return tablename+" table import succeed.";
     }
-    private static String getSQL(String tablename,Table table){
+    private static String getSQL(String tablename,TableImpl table){
         StringBuilder s=new StringBuilder("INSERT INTO ");
         s.append(tablename);
         s.append(" (");
@@ -263,6 +270,15 @@ public class Table2SQLTable {
         s.append(") VALUES (");
         s.append(signs);
         s.append(")");
+        return s.toString();
+    }
+    private static String getUpdateGradeSQL(){
+        StringBuilder s=new StringBuilder("update takes ");
+        s.append("set grade=? ");
+        s.append("where ");
+        s.append("courseid=? and ");
+        s.append("sectionid=? and ");
+        s.append("studentid=?");
         return s.toString();
     }
 }

@@ -17,7 +17,7 @@
 //        return;
 //    }
     //String teacherid=user.id;
-    String teacherid="T103";
+    String teacherid="T104";
 %>
 <html>
 <head>
@@ -48,7 +48,7 @@
 
 <form action="leadingingrade.jsp?action=leadingin" method="post" enctype="multipart/form-data">
     <label>请选择课程id：</label>
-    <select id="ids" name="ids" required="required">
+    <select id="csid" name="csid" required="required">
         <%
             for(Section section:sections){
                 String ids=section.getCourseId()+"."+section.getSectionId();
@@ -58,7 +58,9 @@
             }
         %>
     </select>
-
+    <select id="type" name="type" required="required">
+        <option value="grade">成绩</option>
+    </select>
     <label>上传文件（仅限csv）</label>
     <input type="file" required="required" name="csvfile" accept="text/csv">
     <input type="submit" value="确认提交">

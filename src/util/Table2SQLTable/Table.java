@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class Table {
+public class Table extends TableImpl {
     private List<List<String>> data=new ArrayList<>();
     private List<String> headers=new ArrayList<>();
     //path:csv file's path
@@ -58,13 +58,13 @@ public class Table {
         return data.get(col).get(row);
     }
     public String getString(int row,String head){
-        return getString(row,headers.indexOf(head));
+        return getString(headers.indexOf(head),row);
     }
     public int getInt(int row,int col){
         return Integer.parseInt(data.get(col).get(row));
     }
     public int getInt(int row, String head){
-        return getInt(row,headers.indexOf(head));
+        return getInt(headers.indexOf(head),row);
     }
     public int getSize(){
         return data.get(0).size();
@@ -73,7 +73,7 @@ public class Table {
         return headers;
     }
 
-    public List<List<String>> getData() {
+    List<List<String>> getData() {
         return data;
     }
 }
