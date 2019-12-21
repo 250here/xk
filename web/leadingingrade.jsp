@@ -13,11 +13,11 @@
 
 <%
     User user=(User)session.getAttribute("user");
-//    if(user==null||!user.isTeacher()){
-//        return;
-//    }
-    //String teacherid=user.id;
-    String teacherid="T104";
+    if(user==null||!user.isTeacher()){
+        return;
+    }
+    String teacherid=user.id;
+    //String teacherid="T104";
 %>
 <html>
 <head>
@@ -29,7 +29,10 @@
 <p>
     <%
         String action=request.getParameter("action");
+        List<Section> sections=new TeachesDAO().getSectionByTeacherid(teacherid);
         if("leadingin".equals(action)){
+            //boolean havethissection=false;
+            System.out.println(request.getParameter("csid"));
             String result= LeadingInService.leadingfin(request);
             if(result!=null&&result.contains("succeed")){
                 out.println("成绩导入成功");
@@ -37,7 +40,6 @@
                 out.println(result);
             }
         }
-        List<Section> sections=new TeachesDAO().getSectionByTeacherid(teacherid);
         if(sections.size()==0){
             out.println("你没有课，不需要导入成绩");
             return;
