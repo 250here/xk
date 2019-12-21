@@ -21,7 +21,7 @@
     <title>roster</title>
 </head>
 <body>
-<div class="col-sm-4">
+<div class="col-sm-2">
     <ul class="nav nav-pills nav-stacked">
         <li><a href="">查看课程表</a> </li>
         <li><a href="">查看花名册</a> </li>
@@ -29,21 +29,22 @@
         <li><a href="index.jsp?action=logout">登出</a></li>
     </ul>
 </div>
-<div class="col-sm-6" >
-    <form action="roster.jsp?action=submit" method="post">
+<div class="col-sm-8" >
+
     <table class="table table-striped">
         <caption>花名册</caption>
-        <tr> <thead>
+         <thead>
         <th>课程代码</th>
         <th>课程名称</th>
         <th>学号</th>
         <th>姓名</th>
         <th>分数</th>
-        <th>登分</th>
-        <th>操作</th>
+         <th>登分</th>
+         <th>操作</th>
         </thead>
         <%
-        User user = (User)session.getAttribute("user");
+//        User user = (User)session.getAttribute("user");
+                   User user = new User("T001");
                 TeachesDAO teachesDAO = new TeachesDAO();
                 ArrayList<Section> sections = teachesDAO.getSectionByTeacherid(user.id);
                 TakesDAO takesDAO = new TakesDAO();
@@ -60,15 +61,32 @@
             <td><%=student.id%></td>
             <td><%=student.name%></td>
             <td><%=takesDAO.getGrade(section.getCourseId(),section.getSectionId(),student.id)%></td>
-            <td><input name="newgrade" type="text"></td>
-            <td><button type="submit">确认</button></td>
-        </tr>
+            <form action="roster.jsp?action=submit" method="post">
+                <input name="courseid" type="hidden" value="<%=section.getCourseId()%>">
+                <input name="sectionid" type="hidden" value="<%=section.getSectionId()%>">
+                <input name="studentid" type="hidden" value="<%=student.id%>">
+                <td><input name="newgrade" type="text"></td>
+                <td><button type="submit">确认</button></td>
+            </form></tr>
                 <%
                     }
                 }
                 %>
         </table>
-    </form>
+<%
+    if("submit".equals(request.getParameter("action"))) {
+        String courseid = request.getParameter("courseid");
+        String sectionid = request.getParameter("sectionid");
+        String studentid = request.getParameter("studentid");
+        String newgrade = request.getParameter("newgrade");
+        takesDAO.updateGrade(courseid,sectionid,studentid,newgrade);
+        %>
+    <script type="text/javascript" language="javascript">
+        alert("修改成功");
+    </script>
+    <%
+    }
+%>
 </div>
 </body>
 </html>

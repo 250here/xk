@@ -61,8 +61,9 @@ public class TakesDAO {
             while (rs.next()){
 //                String courseid = rs.getString("courseid");
                 String studentid = rs.getString("studentid");
+                StudentDAO studentDAO = new StudentDAO();
 
-                User user = new User(studentid);
+                User user = studentDAO.getUserByStudenetID(studentid);
                 users.add(user);
             }
         }catch (Exception e){

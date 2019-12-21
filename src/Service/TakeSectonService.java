@@ -1,5 +1,5 @@
 package Service;
 
 public class TakeSectonService {
-    public static boolean duringTakingSection = false;
+    public static boolean duringTakingSection = true;
 }
