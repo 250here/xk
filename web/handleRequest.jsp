@@ -7,7 +7,7 @@
 <%@ page import="Service.TakeSectonService" %>
 <%@ page import="DAO.ClassroomDAO" %>
 <%@ page import="Beans.Classroom" %>
-<%@ page import="DAO.SectionDAO" %><%--
+<%@ page import="Service.HandleRequestService" %><%--
   Created by IntelliJ IDEA.
   User: 1874442361
   Date: 2019/12/17
@@ -23,8 +23,9 @@
     Request request1 = new Request(request.getParameter("courseid"),request.getParameter("sectionid"),request.getParameter("studentid"));
     requestDAO.updateState(request1,request.getParameter("handle"));
     if(request.getParameter("handle").equals("accept")){
-        Section section = new Section(request.getParameter("courseid"),request.getParameter("sectionid"));
-        takesDAO.insertSectionToTakes(request.getParameter("studentid"),section);
+//        Section section = new Section(request.getParameter("courseid"),request.getParameter("sectionid"));
+//        takesDAO.insertSectionToTakes(request.getParameter("studentid"),section);
+        HandleRequestService.passRequest(request1);
     }
 }%>
 <html>
@@ -59,7 +60,6 @@
            User user = (User)session.getAttribute("user");
            RequestDAO requestDAO = new RequestDAO();
            ClassroomDAO classroomDAO = new ClassroomDAO();
-           SectionDAO sectionDAO = new SectionDAO();
            ArrayList<Request> requests = requestDAO.getRequestByteacherId(user.id);
        for (Request request1:requests){
         %><tr>
@@ -70,12 +70,13 @@
 
             <%
         if(request1.getState().equals("handling")){
-            Section section = sectionDAO.getSectionByCourseAndSectionid(request1.getCourseId(),request1.getSectionId());
-
-            if(section.getNumberOfStudent()>=classroomDAO.getClassroom(section.getBuilding(),section.getRoomNumber()).getCapacity()){
-                requestDAO.updateState(request1,"refuse");
+            String autocheckresult=null;
+            //Section section = new Section(request1.getCourseId(),request1.getSectionId());
+            if((autocheckresult=HandleRequestService.checkRequests(request1))!=null){
+            //if(section.getNumberOfStudent()>=classroomDAO.getClassroom(section.getBuilding(),section.getRoomNumber()).getCapacity()){
+                //requestDAO.updateState(request1,"refuse");
                 %>
-                <td>自动驳回</td>
+                <td><%=autocheckresult%></td>
         <%
             }else {
         %>
@@ -83,7 +84,7 @@
             <a href="handleRequest.jsp?handle=refuse&courseid=<%=request1.getCourseId()%>&sectionid=<%=request1.getSectionId()%>&studentid=<%=request1.getStudentId()%>">拒绝</a>
         </td>
    <%
-       }
+            }
         }else{
          %>
         <td>已处理</td>

@@ -1,6 +1,8 @@
 package util.Table2SQLTable;
 
+import Beans.Section;
 import DAO.DBConnections;
+import DAO.SectionDAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -149,5 +151,13 @@ public class TableCheck {
         boolean pass=!rs.next();
         DBConnections.returnConnection(conn);
         return pass;
+    }
+    public static String checkCanPassRequest(String studentid,String courseid,String sectionid){
+        Section section=new SectionDAO().getSectionByCourseAndSectionid(courseid,sectionid);
+        if(section==null){
+            return "没有这个课";
+        }
+
+        return null;
     }
 }
