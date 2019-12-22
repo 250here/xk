@@ -17,7 +17,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     boolean durng = TakeSectonService.duringTakingSection;
-    User user = (User) request.getAttribute("user");
+    User user = (User) request.getSession().getAttribute("user");
+    String s="";
 //    User user = new User("S001");
     if(request.getParameter("ac")!=null&&!request.getParameter("ac").equals("")){
     TakesDAO takesDAO = new TakesDAO();
@@ -27,7 +28,7 @@
 
         Section section =new Section(courseid,sectionid);
         if(!takesDAO.hadTakes(courseid,sectionid,user.id)){
-        String s = takesDAO.insertSectionToTakes(user.id,section);
+        s = takesDAO.insertSectionToTakes(user.id,section);
 
         if(s.equals("选课成功")){
             s="";
@@ -43,16 +44,9 @@
                 takesDAO.deleteSectionFromTakes(user.id,section);
             }
         %>
-<script type="text/javascript" language="javascript">
-    alert(<%=s%>);
-</script>
 <%
     }else {
-%>
-<script type="text/javascript" language="javascript">
-    alert("选课失败");
-</script>
-<%
+s="选课失败";
     }
     }
     }
@@ -77,6 +71,9 @@
     <title>studentIndex</title>
 </head>
 <body>
+<script type="text/javascript" language="javascript">
+    alert(<%=s%>);
+</script>
 
                <div class="col-sm-2">
                 <ul class="nav nav-pills nav-stacked">
@@ -136,6 +133,7 @@
                         <td>
                             <%
                                 if(durng==true){
+                                    //out.print(section);out.print(user);
                             if(takesDAO.hadTakes(section.getCourseId(),section.getSectionId(),user.id)){
                                 %>
                             <a href="studentIndex.jsp?ac=drop&courseid=<%=section.getCourseId()%>&sectionid=<%=section.getSectionId()%>">退课</a>

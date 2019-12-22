@@ -66,7 +66,7 @@ public class UpdateSectionService {
             values.add(courseid);
             values.add(sectionid);
             conn.setAutoCommit(false);
-            DBConnections.executeSql(conn,sql,values);
+            DBConnections.executeSql(conn,sql,values.toArray());
             //check
             TableCheck.checkClassroomTime(conn);
             TableCheck.checkSectionStudentLimitLessThanClassroomcapacity(conn);

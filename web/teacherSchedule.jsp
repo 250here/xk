@@ -53,7 +53,7 @@
             for(Section section:sections){
         %>
        <tr>
-           <td><%=section.getSectionId()%></td>
+           <td><%=section.getCourseId()+"."+section.getSectionId()%></td>
            <td><%=section.getSectionName()%></td>
            <td><%
                ArrayList<TimeSlot> timeSlots = timeSlotDAO.getTimeSlot(section.getTimeSlotId());

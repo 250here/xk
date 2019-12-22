@@ -93,7 +93,7 @@ boolean during = TakeSectonService.duringTakingSection;
         Section section = new Section(courseid,sectionid);
         section.setSectionName(courseName);
     String message = Encode.parseToUTF8(request.getParameter("message"));
-    User student = (User)request.getAttribute("user");
+    User student = (User)session.getAttribute("user");
 
     Request request1 = new Request(courseid,sectionid,student.id);
     request1.setState("handling");

@@ -4,7 +4,8 @@
 <%@ page import="DAO.SectionDAO" %>
 <%@ page import="DAO.TeachesDAO" %>
 <%@ page import="DAO.TimeSlotDAO" %>
-<%@ page import="Beans.Section" %><%--
+<%@ page import="Beans.Section" %>
+<%@ page import="Service.TakeSectonService" %><%--
   Created by IntelliJ IDEA.
   User: 1874442361
   Date: 2019/12/19
@@ -35,13 +36,21 @@ if(request.getParameter("courseid")!=null&&request.getParameter("sectionid")!=nu
 <body>
 <div class="col-sm-2">
     <ul class="nav nav-pills nav-stacked">
+        <li><a href="leadingintables.jsp">导入</a></li>
         <li><a href="addSection.jsp">添加课程</a> </li>
         <li><a href="deleteSection.jsp">删除课程</a> </li>
         <li><a href="updateSection.jsp">修改课程信息</a></li>
+        <li><%if(TakeSectonService.duringTakingSection ==false){
+
+        %><a href="addSection.jsp?change=open">开启选课</a><%
+        }else {
+        %><a href="addSection.jsp?change=close">关闭选课</a>
+            <%}%>
+        </li>
         <li><a href="index.jsp?action=logout">登出</a></li>
-        <li><a href="">开启选课</a></li>
     </ul>
 </div>
+
 
 <div class="col-sm-6" >
     <form> 输入课程名：<input name = "search" type="text">

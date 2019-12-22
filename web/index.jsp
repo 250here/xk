@@ -16,7 +16,8 @@
   User user=(User)request.getSession().getAttribute("user");
   String action=request.getParameter("action");
   if("logout".equals(action)){
-    accountService.Logout(request);
+      user=null;
+      accountService.Logout(request);
   }
 %>
 <html>

@@ -126,7 +126,7 @@ public class TableCheck {
                 "where studentid=? )";
         sql+="select * from student_examtime as S join student_examtime as T "
                 +"on S.studentid=T.studentid and not (S.courseid=T.courseid and S.sectionid=T.sectionid)";
-        sql+="where S.day =T.day and S.starttime<=T.starttime and T.starttime<=S.endtime";
+        sql+="where S.examday =T.examday and S.examstarttime<=T.examstarttime and T.examstarttime<=S.examendtime";
         Connection conn= DBConnections.borrowConnection();
         PreparedStatement stat=conn.prepareStatement(sql);
         stat.setObject(1,studentid);
@@ -137,8 +137,8 @@ public class TableCheck {
     }
     public static boolean checkStudentTime(String studentid)throws Exception{
         String sql="with student_time as (select studentid,courseid,sectionid,day,starttime,endtime "+
-                "from student natural join takes natural join section natural join timeslot) "+
-                "where studentid=? ";
+                "from student natural join takes natural join section natural join timeslot "+
+                "where studentid=? )";
         sql+="select * from student_time as S join student_time as T "
                 +"on S.studentid=T.studentid and not (S.courseid=T.courseid and S.sectionid=T.sectionid)";
         sql+="where S.day =T.day and S.starttime<=T.starttime and T.starttime<=S.endtime";

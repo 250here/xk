@@ -31,19 +31,21 @@
 <body>
 <div class="col-sm-2">
     <ul class="nav nav-pills nav-stacked">
+        <li><a href="leadingintables.jsp">导入</a></li>
         <li><a href="addSection.jsp">添加课程</a> </li>
         <li><a href="deleteSection.jsp">删除课程</a> </li>
         <li><a href="updateSection.jsp">修改课程信息</a></li>
-        <li><a href="index.jsp?action=logout">登出</a></li>
-        <li><%if(during==false){
+        <li><%if(TakeSectonService.duringTakingSection ==false){
 
         %><a href="addSection.jsp?change=open">开启选课</a><%
         }else {
-            %><a href="addSection.jsp?change=close">关闭选课</a>
-        <%}%>
+        %><a href="addSection.jsp?change=close">关闭选课</a>
+            <%}%>
         </li>
+        <li><a href="index.jsp?action=logout">登出</a></li>
     </ul>
 </div>
+
 
 <div class="col-sm-9">
     <form action="addSection.jsp?action=submit" method="post">
@@ -92,7 +94,7 @@
             if(result!=null){
                 %>
     <script type="text/javascript" language="javascript">
-        alert("导入失败<%=result%>");                                            // 弹出错误信息
+        alert("<%=result%>");                                            // 弹出错误信息
     </script>
     <%
             }else {

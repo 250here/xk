@@ -43,8 +43,8 @@
          <th>操作</th>
         </thead>
         <%
-//        User user = (User)session.getAttribute("user");
-                   User user = new User("T001");
+       User user = (User)session.getAttribute("user");
+                   //.User user = new User("T001");
                 TeachesDAO teachesDAO = new TeachesDAO();
                 ArrayList<Section> sections = teachesDAO.getSectionByTeacherid(user.id);
                 TakesDAO takesDAO = new TakesDAO();
