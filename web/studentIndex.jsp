@@ -1,13 +1,11 @@
 <%@ page import="Beans.Section" %>
-<%@ page import="DAO.SectionDAO" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="DAO.TeachesDAO" %>
 <%@ page import="Beans.User" %>
-<%@ page import="DAO.TimeSlotDAO" %>
 <%@ page import="Beans.TimeSlot" %>
-<%@ page import="DAO.TakesDAO" %>
 <%@ page import="Service.TakeSectonService" %>
-<%@ page import="util.Table2SQLTable.TableCheck" %><%--
+<%@ page import="util.Table2SQLTable.TableCheck" %>
+<%@ page import="DAO.*" %>
+<%@ page import="Beans.Request" %><%--
   Created by IntelliJ IDEA.
   User: 1874442361
   Date: 2019/12/16
@@ -16,6 +14,8 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
+    RequestDAO requestDAO = new RequestDAO();
+    SectionDAO sectionDAO = new SectionDAO();
     boolean durng = TakeSectonService.duringTakingSection;
     User user = (User) request.getSession().getAttribute("user");
     String s="";
@@ -26,10 +26,15 @@
     String sectionid = request.getParameter("sectionid");
     if(request.getParameter("ac").equals("take")){
 
-        Section section =new Section(courseid,sectionid);
+//        Section section =new Section(courseid,sectionid);
+        Section section = sectionDAO.getSectionByCourseAndSectionid(courseid,sectionid);
         if(!takesDAO.hadTakes(courseid,sectionid,user.id)){
         s = takesDAO.insertSectionToTakes(user.id,section);
 
+        Request request1 = new Request(courseid,sectionid,user.id);
+        if(requestDAO.haveRequest(request1)&&requestDAO.getOneRequest(courseid,sectionid,user.id).getState().equals("accept")){   //退掉了申请课程
+            s = "选课失败";
+        }
         if(s.equals("选课成功")){
             s="";
             if(!TableCheck.checkStudentTime(user.id)){
@@ -39,6 +44,10 @@
                 s+="考试时间冲突.";
             }
             if(s.equals("")){
+
+                if(requestDAO.haveRequest(request1)&&requestDAO.getOneRequest(courseid,sectionid,user.id).getState().equals("handling")){
+                    requestDAO.deleteRequest(request1);
+                }
                 s="选课成功";
             }else{
                 takesDAO.deleteSectionFromTakes(user.id,section);
@@ -71,10 +80,16 @@ s="选课失败";
     <title>studentIndex</title>
 </head>
 <body>
-<script type="text/javascript" language="javascript">
-    alert(<%=s%>);
-</script>
+<%
+if(!s.equals("")){
+   %>
 
+<script type="text/javascript" language="javascript">
+    alert("<%=s%>");
+</script>
+<%
+}
+%>
                <div class="col-sm-2">
                 <ul class="nav nav-pills nav-stacked">
                     <li><a href="studentIndex.jsp">选课</a> </li>
@@ -103,7 +118,7 @@ s="选课失败";
                     <%
                         String partName = request.getParameter("search");
 
-                        SectionDAO sectionDAO = new SectionDAO();
+//                        SectionDAO sectionDAO = new SectionDAO();
                         TeachesDAO teachesDAO = new TeachesDAO();
                         TimeSlotDAO timeSlotDAO =new TimeSlotDAO();
                         TakesDAO takesDAO = new TakesDAO();

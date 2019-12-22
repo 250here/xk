@@ -93,6 +93,12 @@ System.out.println(sectionName);
         String sql="insert into request values (?,?,?,?,?)";
         DBConnections.executeSql(sql,request.getCourseId(),request.getSectionId(),request.getStudentId(),request.getState(),request.getMessage());
     }
+    public void deleteRequest(Request request){
+        Connection conn=DBConnections.borrowConnection();
+        String sql="delete from request where courseid=? and sectionid=? and studentid=?";
+        DBConnections.executeSql(sql,request.getCourseId(),request.getSectionId(),request.getStudentId());
+
+    }
     public boolean haveRequest(Request request){
         Connection conn=DBConnections.borrowConnection();
         String sql="select * from request where courseid=? and sectionid=? and studentid=?";
@@ -111,4 +117,32 @@ System.out.println(sectionName);
         DBConnections.returnConnection(conn);
         return false;
     }
+    public Request getOneRequest(String courseid,String sectionid,String studentid){
+        Connection conn=DBConnections.borrowConnection();
+        String sql="select * from request where courseid=? and sectionid=? and studentid=?";
+        Request request = new Request();
+        try{
+            PreparedStatement stmt= conn.prepareStatement(sql);
+            stmt.setObject(1,courseid);
+            stmt.setObject(2,sectionid);
+            stmt.setObject(3,studentid);
+            ResultSet rs=    stmt.executeQuery();
+            if(rs.next()){
+                String state = rs.getString("state");
+                String message = rs.getString("message");
+
+                request.setCourseId(courseid);
+                request.setSectionId(sectionid);
+                request.setStudentId(sectionid);
+                request.setState(state);
+                request.setMessage(message);
+
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        DBConnections.returnConnection(conn);
+        return request;
+            }
+
 }

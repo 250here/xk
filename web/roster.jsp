@@ -23,9 +23,9 @@
 <body>
 <div class="col-sm-2">
     <ul class="nav nav-pills nav-stacked">
-        <li><a href="">查看课程表</a> </li>
-        <li><a href="">查看花名册</a> </li>
-        <li><a href="">处理选课事务申请</a> </li>
+        <li><a href="teacherSchedule.jsp">查看课程表</a> </li>
+        <li><a href="roster.jsp">查看花名册</a> </li>
+        <li><a href="handleRequest.jsp">处理选课事务申请</a> </li>
         <li><a href="index.jsp?action=logout">登出</a></li>
     </ul>
 </div>

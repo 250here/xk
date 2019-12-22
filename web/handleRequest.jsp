@@ -6,7 +6,8 @@
 <%@ page import="Beans.Section" %>
 <%@ page import="Service.TakeSectonService" %>
 <%@ page import="DAO.ClassroomDAO" %>
-<%@ page import="Beans.Classroom" %><%--
+<%@ page import="Beans.Classroom" %>
+<%@ page import="DAO.SectionDAO" %><%--
   Created by IntelliJ IDEA.
   User: 1874442361
   Date: 2019/12/17
@@ -58,6 +59,7 @@
            User user = (User)session.getAttribute("user");
            RequestDAO requestDAO = new RequestDAO();
            ClassroomDAO classroomDAO = new ClassroomDAO();
+           SectionDAO sectionDAO = new SectionDAO();
            ArrayList<Request> requests = requestDAO.getRequestByteacherId(user.id);
        for (Request request1:requests){
         %><tr>
@@ -68,7 +70,8 @@
 
             <%
         if(request1.getState().equals("handling")){
-            Section section = new Section(request1.getCourseId(),request1.getSectionId());
+            Section section = sectionDAO.getSectionByCourseAndSectionid(request1.getCourseId(),request1.getSectionId());
+
             if(section.getNumberOfStudent()>=classroomDAO.getClassroom(section.getBuilding(),section.getRoomNumber()).getCapacity()){
                 requestDAO.updateState(request1,"refuse");
                 %>
