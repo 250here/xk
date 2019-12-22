@@ -20,11 +20,12 @@
     <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
-<div class="col-sm-4">
+<div class="col-sm-2">
     <ul class="nav nav-pills nav-stacked">
         <li><a href="teacherSchedule.jsp">查看课程表</a> </li>
         <li><a href="roster.jsp">查看花名册</a> </li>
         <li><a href="handleRequest.jsp">处理选课事务申请</a> </li>
+        <li><a href="leadingingrade.jsp">导入成绩</a></li>
         <li><a href="index.jsp?action=logout">登出</a></li>
     </ul>
 </div>

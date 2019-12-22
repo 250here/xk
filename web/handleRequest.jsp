@@ -21,7 +21,7 @@
     RequestDAO requestDAO = new RequestDAO();
     TakesDAO takesDAO = new TakesDAO();
     Request request1 = new Request(request.getParameter("courseid"),request.getParameter("sectionid"),request.getParameter("studentid"));
-    requestDAO.updateState(request1,request.getParameter("handle"));
+    //requestDAO.updateState(request1,request.getParameter("handle"));
     if(request.getParameter("handle").equals("accept")){
 //        Section section = new Section(request.getParameter("courseid"),request.getParameter("sectionid"));
 //        takesDAO.insertSectionToTakes(request.getParameter("studentid"),section);
@@ -41,6 +41,7 @@
         <li><a href="teacherSchedule.jsp">查看课程表</a> </li>
         <li><a href="roster.jsp">查看花名册</a> </li>
         <li><a href="handleRequest.jsp">处理选课事务申请</a> </li>
+        <li><a href="leadingingrade.jsp">导入成绩</a></li>
         <li><a href="index.jsp?action=logout">登出</a></li>
     </ul>
 </div>

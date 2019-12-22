@@ -26,9 +26,24 @@
         <li><a href="teacherSchedule.jsp">查看课程表</a> </li>
         <li><a href="roster.jsp">查看花名册</a> </li>
         <li><a href="handleRequest.jsp">处理选课事务申请</a> </li>
+        <li><a href="leadingingrade.jsp">导入成绩</a></li>
         <li><a href="index.jsp?action=logout">登出</a></li>
     </ul>
 </div>
+<%
+    if("submit".equals(request.getParameter("action"))) {
+        String courseid = request.getParameter("courseid");
+        String sectionid = request.getParameter("sectionid");
+        String studentid = request.getParameter("studentid");
+        String newgrade = request.getParameter("newgrade");
+        new TakesDAO().updateGrade(courseid,sectionid,studentid,newgrade);
+%>
+<script type="text/javascript" language="javascript">
+    alert("修改成功");
+</script>
+<%
+    }
+%>
 <div class="col-sm-8" >
 
     <table class="table table-striped">
@@ -73,20 +88,6 @@
                 }
                 %>
         </table>
-<%
-    if("submit".equals(request.getParameter("action"))) {
-        String courseid = request.getParameter("courseid");
-        String sectionid = request.getParameter("sectionid");
-        String studentid = request.getParameter("studentid");
-        String newgrade = request.getParameter("newgrade");
-        takesDAO.updateGrade(courseid,sectionid,studentid,newgrade);
-        %>
-    <script type="text/javascript" language="javascript">
-        alert("修改成功");
-    </script>
-    <%
-    }
-%>
 </div>
 </body>
 </html>

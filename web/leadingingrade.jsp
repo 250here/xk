@@ -28,17 +28,10 @@
 <body>
 <div class="col-sm-2">
     <ul class="nav nav-pills nav-stacked">
-        <li><a href="leadingintables.jsp">导入</a></li>
-        <li><a href="addSection.jsp">添加课程</a> </li>
-        <li><a href="deleteSection.jsp">删除课程</a> </li>
-        <li><a href="updateSection.jsp">修改课程信息</a></li>
-        <li><%if(TakeSectonService.duringTakingSection ==false){
-
-        %><a href="addSection.jsp?change=open">开启选课</a><%
-        }else {
-        %><a href="addSection.jsp?change=close">关闭选课</a>
-            <%}%>
-        </li>
+        <li><a href="teacherSchedule.jsp">查看课程表</a> </li>
+        <li><a href="roster.jsp">查看花名册</a> </li>
+        <li><a href="handleRequest.jsp">处理选课事务申请</a> </li>
+        <li><a href="leadingingrade.jsp">导入成绩</a></li>
         <li><a href="index.jsp?action=logout">登出</a></li>
     </ul>
 </div>
